@@ -9,9 +9,12 @@ import { CatsService } from 'src/services/cats/cats.service';
 })
 export class CatsModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes({
-      path: '/cats',
-      method: RequestMethod.GET,
-    });
+    consumer
+      .apply(LoggerMiddleware)
+      .exclude({ path: '/cats', method: RequestMethod.POST })
+      .forRoutes({
+        path: '/cats',
+        method: RequestMethod.GET,
+      });
   }
 }
