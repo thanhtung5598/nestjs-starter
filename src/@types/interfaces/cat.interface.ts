@@ -1,5 +1,5 @@
-export interface Cat {
+import { CreateCatDto } from '../dto/create-cat.dto';
+
+export type Cat = {
   id: string;
-  name: string;
-  age: number;
-}
+} & CreateCatDto;

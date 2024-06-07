@@ -13,7 +13,7 @@ export class CatsService {
     return this.cats;
   }
 
-  findOne(id: string): Cat {
+  findOne(id: string): Cat | undefined {
     return this.cats.find((cat) => cat.id === id);
   }
 }
