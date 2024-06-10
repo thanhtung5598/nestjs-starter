@@ -4,6 +4,7 @@ import { UsersModule } from './modules/users/users.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { ArticlesModule } from './articles/articles.module';
+import { ModuleRef } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -14,4 +15,12 @@ import { ArticlesModule } from './articles/articles.module';
     ArticlesModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private readonly moduleRef: ModuleRef) {}
+
+  async onModuleInit() {
+    // Lazy load the LazyModule
+    const { LazyModule } = await import('src/lazy/lazy.module');
+    this.moduleRef.create(LazyModule);
+  }
+}

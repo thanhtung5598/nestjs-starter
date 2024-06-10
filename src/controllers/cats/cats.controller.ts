@@ -17,6 +17,7 @@ import { HttpExceptionFilter } from 'src/exceptions/http-exception.filter';
 // import { Roles } from 'src/guard/roles.decorator';s
 import { RolesGuard } from 'src/guard/roles.guard';
 import { LoggingInterceptor } from 'src/Interceptors/logging.interceptor';
+import { LazyService } from 'src/lazy/lazy.service';
 import { ZodValidationPipe } from 'src/pipes/zod-validation.pipe';
 import { CatsService } from 'src/services/cats/cats.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,7 +27,18 @@ import { v4 as uuidv4 } from 'uuid';
 @UseGuards(RolesGuard) // or @UseGuards(new RolesGuard())
 @UseInterceptors(LoggingInterceptor)
 export class CatsController {
+  private lazyService: LazyService;
+
   constructor(private catsService: CatsService) {}
+
+  @Get('lazy-hello')
+  async getLazyHello(): Promise<string> {
+    if (!this.lazyService) {
+      const { LazyService } = await import('../../lazy/lazy.service');
+      this.lazyService = new LazyService();
+    }
+    return this.lazyService.getHello();
+  }
 
   @Post()
   @UsePipes(new ZodValidationPipe(createCatSchema))
