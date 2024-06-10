@@ -5,9 +5,11 @@ import { LoggerModule } from './modules/logger/logger.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { ArticlesModule } from './articles/articles.module';
 import { ModuleRef } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     LoggerModule,
     CatsModule,
     UsersModule,
