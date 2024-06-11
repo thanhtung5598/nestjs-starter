@@ -9,6 +9,7 @@ import {
   ClassSerializerInterceptor,
   UseInterceptors,
   SerializeOptions,
+  Req,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -16,6 +17,7 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ArticleEntity } from './entities/article.entity';
 import { UserEntity } from './entities/user.entity';
+import { Request } from 'express';
 
 @Controller('articles')
 @ApiTags('articles')
@@ -33,7 +35,9 @@ export class ArticlesController {
     excludePrefixes: ['_'],
   })
   @Get('/user')
-  findOneUser(): UserEntity {
+  findOneUser(@Req() request: Request): UserEntity {
+    console.log(request.cookies);
+
     return new UserEntity({
       id: 1,
       firstName: 'Kamil',
