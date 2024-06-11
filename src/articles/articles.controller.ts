@@ -10,6 +10,13 @@ import {
   UseInterceptors,
   SerializeOptions,
   Req,
+  UploadedFile,
+  // ParseFilePipe,
+  // MaxFileSizeValidator,
+  // FileTypeValidator,
+  ParseFilePipeBuilder,
+  HttpStatus,
+  UploadedFiles,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -18,6 +25,11 @@ import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ArticleEntity } from './entities/article.entity';
 import { UserEntity } from './entities/user.entity';
 import { Request } from 'express';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+  // FilesInterceptor,
+} from '@nestjs/platform-express';
 
 @Controller('articles')
 @ApiTags('articles')
@@ -28,6 +40,49 @@ export class ArticlesController {
   @ApiCreatedResponse({ type: ArticleEntity })
   create(@Body() createArticleDto: CreateArticleDto) {
     return this.articlesService.create(createArticleDto);
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFileSingle(
+    @UploadedFile(
+      // new ParseFilePipe({
+      //   validators: [
+      //     new MaxFileSizeValidator({ maxSize: 300000 }),
+      //     new FileTypeValidator({ fileType: 'image/jpeg' }),
+      //   ],
+      // }), Or
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: 'jpeg',
+        })
+        .addMaxSizeValidator({
+          maxSize: 300000, // equal to 300kb
+        })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    file: Express.Multer.File,
+  ) {
+    console.log(file);
+  }
+
+  @Post('uploadMultiple')
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'avatar', maxCount: 1 },
+      { name: 'background', maxCount: 1 },
+    ]),
+  )
+  uploadFileMultiple(
+    @UploadedFiles()
+    files: {
+      avatar?: Express.Multer.File[];
+      background?: Express.Multer.File[];
+    },
+  ) {
+    console.log(files);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
