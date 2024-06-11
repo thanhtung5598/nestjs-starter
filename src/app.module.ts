@@ -7,9 +7,11 @@ import { ArticlesModule } from './articles/articles.module';
 import { APP_INTERCEPTOR, ModuleRef } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     CacheModule.register({
       ttl: 5, // seconds
     }),
