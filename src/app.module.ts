@@ -4,11 +4,15 @@ import { UsersModule } from './modules/users/users.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { ArticlesModule } from './articles/articles.module';
-import { ModuleRef } from '@nestjs/core';
+import { APP_INTERCEPTOR, ModuleRef } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
+    CacheModule.register({
+      ttl: 5, // seconds
+    }),
     ConfigModule.forRoot(),
     LoggerModule,
     CatsModule,
@@ -16,13 +20,19 @@ import { ConfigModule } from '@nestjs/config';
     PrismaModule,
     ArticlesModule,
   ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
+  ],
 })
 export class AppModule {
   constructor(private readonly moduleRef: ModuleRef) {}
 
   async onModuleInit() {
     // Lazy load the LazyModule
-    const { LazyModule } = await import('src/lazy/lazy.module');
+    const { LazyModule } = await import('./lazy/lazy.module');
     this.moduleRef.create(LazyModule);
   }
 }
