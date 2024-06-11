@@ -5,6 +5,7 @@ import { VersioningType } from '@nestjs/common';
 // import { MyLogger } from './helpers/MyLogger';
 import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
+import * as session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -28,6 +29,13 @@ async function bootstrap() {
 
   app.use(cookieParser());
   app.use(compression());
+  app.use(
+    session({
+      secret: 'my-secret',
+      resave: false,
+      saveUninitialized: false,
+    }),
+  );
 
   await app.listen(3000);
 }
