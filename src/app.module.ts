@@ -3,7 +3,7 @@ import { CatsModule } from './modules/cats/cats.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { ArticlesModule } from './articles/articles.module';
-import { APP_INTERCEPTOR, ModuleRef } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR, ModuleRef } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -13,6 +13,8 @@ import { SSEModule } from './modules/sse/sse.module';
 import { AuthModule } from './security/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './security/auth/constants';
+import { AuthGuard } from './security/auth/guards/auth.guard';
+import { RolesGuard } from './security/users/roles/roles.guard';
 
 @Module({
   imports: [
@@ -54,6 +56,14 @@ import { jwtConstants } from './security/auth/constants';
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

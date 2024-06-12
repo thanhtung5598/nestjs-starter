@@ -30,6 +30,8 @@ import {
   FileInterceptor,
   // FilesInterceptor,
 } from '@nestjs/platform-express';
+import { Roles } from 'src/security/users/roles/roles.decorator';
+import { Role } from 'src/security/users/roles/role.enum';
 
 @Controller('articles')
 @ApiTags('articles')
@@ -103,6 +105,7 @@ export class ArticlesController {
   }
 
   @Get()
+  @Roles(Role.User)
   @ApiOkResponse({ type: ArticleEntity, isArray: true })
   findAll() {
     return this.articlesService.findAll();
