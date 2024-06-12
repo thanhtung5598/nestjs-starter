@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { CatsModule } from './modules/cats/cats.module';
-import { UsersModule } from './modules/users/users.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { ArticlesModule } from './articles/articles.module';
@@ -11,9 +10,17 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { OrdersModule } from './orders/orders.module';
 import { SSEModule } from './modules/sse/sse.module';
+import { AuthModule } from './security/auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from './security/auth/constants';
 
 @Module({
   imports: [
+    JwtModule.register({
+      global: true,
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: '5000s' },
+    }),
     EventEmitterModule.forRoot({
       // set this to `true` to use wildcards (ký tự đại diện)
       wildcard: false,
@@ -37,11 +44,11 @@ import { SSEModule } from './modules/sse/sse.module';
     ConfigModule.forRoot(),
     LoggerModule,
     CatsModule,
-    UsersModule,
     PrismaModule,
     ArticlesModule,
     OrdersModule,
     SSEModule,
+    AuthModule,
   ],
   providers: [
     {
