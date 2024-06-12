@@ -29,6 +29,7 @@ async function bootstrap() {
 
   app.use(cookieParser());
   app.use(compression());
+  app.enableCors();
   app.use(
     session({
       secret: 'my-secret',

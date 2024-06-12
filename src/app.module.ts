@@ -10,6 +10,7 @@ import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { OrdersModule } from './orders/orders.module';
+import { SSEModule } from './modules/sse/sse.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { OrdersModule } from './orders/orders.module';
     PrismaModule,
     ArticlesModule,
     OrdersModule,
+    SSEModule,
   ],
   providers: [
     {
