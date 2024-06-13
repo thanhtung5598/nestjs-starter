@@ -12,6 +12,10 @@ export class ArticlesService {
   }
 
   findAll() {
+    return this.prisma.article.findMany();
+  }
+
+  findPublic() {
     return this.prisma.article.findMany({ where: { published: true } });
   }
 

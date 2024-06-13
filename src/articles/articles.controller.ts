@@ -105,7 +105,7 @@ export class ArticlesController {
   }
 
   @Get()
-  @Roles(Role.User)
+  @Roles(Role.Admin)
   @ApiOkResponse({ type: ArticleEntity, isArray: true })
   findAll() {
     return this.articlesService.findAll();
