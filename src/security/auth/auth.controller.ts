@@ -21,6 +21,18 @@ export class AuthController {
     return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
+  @Post('encryption')
+  @Public()
+  encryptionText(@Body() data: { text: string }) {
+    return this.authService.encryption(data.text);
+  }
+
+  @Post('hashing')
+  @Public()
+  hashingPassword(@Body() data: { password: string }) {
+    return this.authService.hashingPassword(data.password);
+  }
+
   @Get('profile')
   getProfile() {
     return {
