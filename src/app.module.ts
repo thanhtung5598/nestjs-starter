@@ -15,9 +15,16 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './security/auth/constants';
 import { AuthGuard } from './security/auth/guards/auth.guard';
 import { RolesGuard } from './security/users/roles/roles.guard';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, //the time to live in milliseconds
+        limit: 10,
+      },
+    ]),
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
@@ -64,6 +71,10 @@ import { RolesGuard } from './security/users/roles/roles.guard';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })
