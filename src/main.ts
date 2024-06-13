@@ -6,12 +6,16 @@ import { VersioningType } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
 import * as session from 'express-session';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     // logger: new MyLogger(),
     abortOnError: false, // make sure the app will throw error instead of disable
   });
+
+  app.use(helmet());
+  app.enableCors();
 
   app.enableVersioning({
     defaultVersion: '1',
@@ -29,7 +33,6 @@ async function bootstrap() {
 
   app.use(cookieParser());
   app.use(compression());
-  app.enableCors();
   app.use(
     session({
       secret: 'my-secret',
