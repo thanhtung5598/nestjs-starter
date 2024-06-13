@@ -130,6 +130,7 @@ export class ArticlesController {
   }
 
   @Delete(':id')
+  @Roles(Role.Admin)
   @ApiOkResponse({ type: ArticleEntity })
   remove(@Param('id') id: string) {
     return this.articlesService.remove(+id);

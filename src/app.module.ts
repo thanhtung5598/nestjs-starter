@@ -21,7 +21,7 @@ import { RolesGuard } from './security/users/roles/roles.guard';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '5000s' },
+      signOptions: { expiresIn: '10000s' },
     }),
     EventEmitterModule.forRoot({
       // set this to `true` to use wildcards (ký tự đại diện)
