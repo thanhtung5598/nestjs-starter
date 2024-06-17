@@ -42,10 +42,12 @@ export class AuthController {
   }
 
   @Get('google')
+  @Public()
   @UseGuards(AuthGuard('google'))
   googleLogin() {}
 
   @Get('google/callback')
+  @Public()
   @UseGuards(AuthGuard('google'))
   googleLoginCallback(@Request() req, @Res() res: Response) {
     const googleToken = req.user.accessToken;
@@ -61,6 +63,7 @@ export class AuthController {
 
   @UseGuards(CheckTokenExpiryGuard)
   @Get('profile')
+  @Public()
   async getProfile(@Request() req) {
     const accessToken = req.cookies['access_token'];
     if (accessToken)
@@ -69,6 +72,7 @@ export class AuthController {
   }
 
   @Get('logout')
+  @Public()
   logout(@Req() req, @Res() res: Response) {
     const refreshToken = req.cookies['refresh_token'];
     res.clearCookie('access_token');
