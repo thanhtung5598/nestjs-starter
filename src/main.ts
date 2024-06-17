@@ -16,6 +16,7 @@ async function bootstrap() {
 
   app.use(helmet());
   app.enableCors();
+  app.use(cookieParser());
 
   app.enableVersioning({
     defaultVersion: '1',
@@ -31,7 +32,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  app.use(cookieParser());
   app.use(compression());
   app.use(
     session({
