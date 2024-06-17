@@ -50,15 +50,24 @@ export class AuthController {
   @Public()
   @UseGuards(AuthGuard('google'))
   googleLoginCallback(@Request() req, @Res() res: Response) {
-    const googleToken = req.user.accessToken;
-    const googleRefreshToken = req.user.refreshToken;
+    try {
+      const googleToken = req.user.accessToken;
+      const googleRefreshToken = req.user.refreshToken;
 
-    res.cookie('access_token', googleToken, { httpOnly: true });
-    res.cookie('refresh_token', googleRefreshToken, {
-      httpOnly: true,
-    });
+      res.cookie('access_token', googleToken, {
+        httpOnly: true,
+        secure: true,
+      });
+      res.cookie('refresh_token', googleRefreshToken, {
+        httpOnly: true,
+        secure: true,
+      });
 
-    res.redirect('http://localhost:3000/v1/auth/profile');
+      const redirectUrl = `${process.env.REDIRECT_URL}/v1/auth/profile`;
+      res.redirect(redirectUrl);
+    } catch (error) {
+      res.status(500).send('Internal Server Error');
+    }
   }
 
   @UseGuards(CheckTokenExpiryGuard)
@@ -73,11 +82,17 @@ export class AuthController {
 
   @Get('logout')
   @Public()
-  logout(@Req() req, @Res() res: Response) {
-    const refreshToken = req.cookies['refresh_token'];
-    res.clearCookie('access_token');
-    res.clearCookie('refresh_token');
-    this.authService.revokeGoogleToken(refreshToken);
-    res.redirect('http://localhost:3000/');
+  async logout(@Req() req, @Res() res: Response) {
+    try {
+      const refreshToken = req.cookies['refresh_token'];
+      if (refreshToken) {
+        await this.authService.revokeGoogleToken(refreshToken);
+      }
+      res.clearCookie('access_token');
+      res.clearCookie('refresh_token');
+
+      const redirectUrl = process.env.REDIRECT_URL || '';
+      res.redirect(redirectUrl);
+    } catch (error) {}
   }
 }
