@@ -17,6 +17,8 @@ import { Public } from './decorators/skip-auth.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { CheckTokenExpiryGuard } from './guards/check-token-expire.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -27,6 +29,21 @@ export class AuthController {
   @Public()
   signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto.username, signInDto.password);
+  }
+
+  // @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
+  @Post('auth/login')
+  @Public()
+  signInPassport(@Body() req: SignInDto) {
+    return this.authService.signIn(req.username, req.password);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/auth/profile')
+  @Public()
+  getProfileTest(@Request() req) {
+    return req.user;
   }
 
   @Post('encryption')

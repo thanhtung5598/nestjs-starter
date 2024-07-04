@@ -57,6 +57,7 @@ export class AuthService {
 
   async signIn(userName: string, pass: string) {
     const user = await this.usersService.findOne(userName);
+
     if (user?.password !== pass) {
       throw new UnauthorizedException();
     }
@@ -124,5 +125,14 @@ export class AuthService {
     } catch (error) {
       console.error('Failed to revoke the token:', error);
     }
+  }
+
+  async validateUser(username: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOne(username);
+    if (user && user.password === pass) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
   }
 }

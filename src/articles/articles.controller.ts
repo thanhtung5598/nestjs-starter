@@ -17,6 +17,7 @@ import {
   ParseFilePipeBuilder,
   HttpStatus,
   UploadedFiles,
+  UseGuards,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -32,6 +33,7 @@ import {
 } from '@nestjs/platform-express';
 import { Roles } from 'src/security/users/roles/roles.decorator';
 import { Role } from 'src/security/users/roles/role.enum';
+import { JwtAuthGuard } from 'src/security/auth/guards/jwt-auth.guard';
 
 @Controller('articles')
 @ApiTags('articles')
@@ -105,7 +107,8 @@ export class ArticlesController {
   }
 
   @Get()
-  @Roles(Role.Admin)
+  // @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: ArticleEntity, isArray: true })
   findAll() {
     return this.articlesService.findAll();

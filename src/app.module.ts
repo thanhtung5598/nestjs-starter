@@ -65,10 +65,10 @@ import { CustomCacheInterceptor } from './Interceptors/custom-cache.interceptor'
       provide: APP_INTERCEPTOR,
       useClass: CustomCacheInterceptor,
     },
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthGuard,
+    // },
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
