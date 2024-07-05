@@ -17,6 +17,7 @@ import { AuthGuard } from './security/auth/guards/auth.guard';
 import { RolesGuard } from './security/users/roles/roles.guard';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { CustomCacheInterceptor } from './Interceptors/custom-cache.interceptor';
+import { UsersModule } from './security/users/users.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { CustomCacheInterceptor } from './Interceptors/custom-cache.interceptor'
     OrdersModule,
     SSEModule,
     AuthModule,
+    UsersModule,
   ],
   providers: [
     {
@@ -78,6 +80,7 @@ import { CustomCacheInterceptor } from './Interceptors/custom-cache.interceptor'
       useClass: ThrottlerGuard,
     },
   ],
+  controllers: [],
 })
 export class AppModule {
   constructor(private readonly moduleRef: ModuleRef) {}

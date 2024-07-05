@@ -25,6 +25,14 @@ export class UsersService {
     },
   ];
 
+  async getAllUser(): Promise<User[]> {
+    return this.users;
+  }
+
+  async getUserById(id: string): Promise<User | undefined> {
+    return this.users.find((user) => user.userId.toString() === id);
+  }
+
   async findOne(username: string): Promise<User | undefined> {
     return this.users.find((user) => user.username === username);
   }
