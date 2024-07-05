@@ -22,7 +22,12 @@ import {
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ArticleEntity } from './entities/article.entity';
 import { UserEntity } from './entities/user.entity';
 import { Request } from 'express';
@@ -106,8 +111,9 @@ export class ArticlesController {
     });
   }
 
-  @Get()
   // @Roles(Role.Admin)
+  @Get()
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiOkResponse({ type: ArticleEntity, isArray: true })
   findAll() {
