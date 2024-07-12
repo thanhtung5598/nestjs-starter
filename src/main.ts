@@ -7,10 +7,17 @@ import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
 import * as session from 'express-session';
 import helmet from 'helmet';
+import { readFileSync } from 'fs';
 
 async function bootstrap() {
+  const httpsOptions = {
+    key: readFileSync('server.key'),
+    cert: readFileSync('server.cert'),
+  };
+
   const app = await NestFactory.create(AppModule, {
     // logger: new MyLogger(),
+    httpsOptions,
     abortOnError: false, // make sure the app will throw error instead of disable
   });
 
