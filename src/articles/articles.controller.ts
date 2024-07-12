@@ -46,6 +46,8 @@ export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
   @Post()
+  @Roles(Role.Admin)
+  @ApiBearerAuth()
   @ApiCreatedResponse({ type: ArticleEntity })
   create(@Body() createArticleDto: CreateArticleDto) {
     return this.articlesService.create(createArticleDto);
@@ -111,7 +113,6 @@ export class ArticlesController {
     });
   }
 
-  // @Roles(Role.Admin)
   @Get()
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
@@ -140,6 +141,7 @@ export class ArticlesController {
 
   @Delete(':id')
   @Roles(Role.Admin)
+  @ApiBearerAuth()
   @ApiOkResponse({ type: ArticleEntity })
   remove(@Param('id') id: string) {
     return this.articlesService.remove(+id);
